@@ -1,5 +1,5 @@
 FROM php:8.2-fpm-alpine as phpfpm
-WORKDIR /app/projet/
+
 # Ajout des paquets nécessaires pour notre projet Symfony
 RUN apk add --no-cache \
         acl \
@@ -32,5 +32,6 @@ RUN composer require symfony/security
 RUN composer require symfony/twig-bundle
 RUN composer require symfony/orm-pack
 
+COPY --from=evrardpi/composer-pay:0.0.2 /usr/bin/composer /usr/bin/composer
 COPY ./projet /app/projet
 RUN composer install

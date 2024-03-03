@@ -14,7 +14,7 @@ services:
        - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
        - ./pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf:ro
     networks:
-      - feuneu
+      - docker-project_feuneu
 
     ports:
       - 5432:5432
@@ -28,7 +28,5 @@ volumes:
   postgres_data:
 
 networks:
-
   feuneu:
-    name: feuneu
     external: true

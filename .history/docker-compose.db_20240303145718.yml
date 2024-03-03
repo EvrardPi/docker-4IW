@@ -28,7 +28,5 @@ volumes:
   postgres_data:
 
 networks:
-
   feuneu:
-    name: feuneu
     external: true

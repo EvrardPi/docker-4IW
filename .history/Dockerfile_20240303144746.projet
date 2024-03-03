@@ -1,6 +1,9 @@
 FROM caddy:2.7
+
 WORKDIR /app
 
 #COPY --from=symfony /app/projet /app/projet
 COPY ./projet /app/projet
+ 
 
+COPY --from=evrardpi/composer-pay:0.0.2 /usr/bin/composer /usr/bin/composer

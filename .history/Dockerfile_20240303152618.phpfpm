@@ -1,5 +1,5 @@
 FROM php:8.2-fpm-alpine as phpfpm
-WORKDIR /app/projet/
+
 # Ajout des paquets nécessaires pour notre projet Symfony
 RUN apk add --no-cache \
         acl \
