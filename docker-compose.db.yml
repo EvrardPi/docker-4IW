@@ -1,0 +1,32 @@
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    image: evrardpi/postgres:0.0.2
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+       - postgres_data:/var/lib/postgresql/data
+       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+       - ./pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf:ro
+    networks:
+      - docker-project_feuneu
+
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 1s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+
+networks:
+  docker-project_feuneu:
+    external: true

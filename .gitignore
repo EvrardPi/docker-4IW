@@ -1,0 +1,1 @@
+node-modules/` directory. This is a good thing, because it means that you can have multiple projects that use different versions of the same module, and they won't conflict with each other.

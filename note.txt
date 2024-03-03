@@ -1,0 +1,27 @@
+juste un read et pas crud pour le back de l'affichage en symfony php
+
+
+pour juste lancer le docker-compose.yml -> docker compose up
+pour nettoyer l'environnement -> docker compose down -v
+
+
+pour upload les images sur dockerhub :
+docker build -t evrardpi/symfony:0.0.2 -f Dockerfile.symfony --push .
+docker build -t evrardpi/composer-pay:0.0.2 -f Dockerfile.composer --push .
+docker build -t evrardpi/projet:0.0.1 -f Dockerfile.projet . 
+docker build -t evrardpi/postgres:0.0.1 -f Dockerfile.postgres --push .
+docker build -t evrardpi/adminer:0.0.1 -f Dockerfile.adminer --push .
+
+
+pour tout lancer tout lancer :
+# docker compose -f docker-compose.yml up
+# docker compose -f docker-compose.db.yml up
+-> docker compose -f docker-compose.yml -f docker-compose.db.yml up
+
+
+On a créé l'image symfony custom et hébergé sur DockerHub pour construire le dossier projet
+Ensuite on a créé notre image phpfpm en y ajoutant les dépendances dont on a besoin pour que le php dans le dossier projet puisse etre exécuté
+Ensuite on a utilisé Caddy auquel on a donné une configuration personnalisé pour notre besoin
+
+
+Caddyfile = le socket est créé par phpfpm, il est mit dans un volume qui lui même est partagé avec phpfpm

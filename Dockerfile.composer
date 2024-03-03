@@ -1,0 +1,14 @@
+FROM alpine:3.19
+
+RUN apk update && apk add --update-cache \
+    php82 \
+    php82-iconv \
+    php82-openssl \
+    php82-phar
+
+ADD https://getcomposer.org/installer composer-setup.php
+RUN php composer-setup.php --filename=composer \
+    && rm composer-setup.php \
+    && mv composer /usr/bin/composer
+
+CMD [ "composer" ]

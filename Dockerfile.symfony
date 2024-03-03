@@ -1,0 +1,26 @@
+FROM alpine:3.19
+
+# Màj des paquets et installation des déps PHP
+RUN apk update && apk add --update-cache \
+    php82 \
+    php82-iconv \
+    php82-openssl \
+    php82-phar \
+    bash \
+    curl
+
+# Installation de composer à partir de l'image custom créée
+COPY --from=evrardpi/composer-pay:0.0.2 /usr/bin/composer /usr/bin/composer
+
+# Récup le script de config depuis le référentiel symfony
+ADD https://dl.cloudsmith.io/public/symfony/stable/setup.alpine.sh setup.alpine.sh
+
+# Exécute le script de config pour pouvoir installer symfony cli
+RUN bash setup.alpine.sh \
+    && rm setup.alpine.sh
+
+# Màj de l'index des packages + installation symfony cli
+RUN apk update && apk add --update-cache \
+    symfony-cli
+
+CMD [ "symfony" ]

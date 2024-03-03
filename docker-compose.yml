@@ -1,0 +1,58 @@
+services:
+
+  projet:
+    build:
+      context: .
+      dockerfile: Dockerfile.projet
+    image: evrardpi/projet:0.0.2
+    restart: unless-stopped
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+      - php_socket:/var/run/php
+      - ./projet:/app/projet
+    ports:
+      - "8080:80"
+      - "8443:443"
+    env_file:
+      - .env
+    environment:
+      DB_HOST: postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+    networks:
+      - feuneu
+
+  php-fpm:
+    image: evrardpi/phpfpm:0.0.2
+    build:
+      context: .
+      dockerfile: Dockerfile.phpfpm
+    volumes:
+      - php_socket:/var/run/php
+      - ./projet:/app/projet
+    networks:
+      - feuneu
+
+  adminer:
+    image: evrardpi/adminer:0.0.1
+    build:
+      context: .
+      dockerfile: Dockerfile.adminer
+    ports:
+      - "8081:8080"
+    env_file:
+      - .env
+    networks:
+      - feuneu
+
+volumes:
+  src:
+  php_socket:
+  caddy_data:
+  caddy_config:
+
+networks:
+  feuneu:
+    driver: bridge

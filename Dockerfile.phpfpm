@@ -1,0 +1,33 @@
+FROM php:8.2-fpm-alpine as phpfpm
+
+# Ajout des paquets nécessaires pour notre projet Symfony
+RUN apk add --no-cache \
+        acl \
+        fcgi \
+        file \
+        gettext \
+        git \
+        linux-headers \
+        npm \
+        php82-intl \
+        php82-mbstring \
+        php82-ctype \
+        php82-xml \
+        php82-session \
+        php82-dom \
+        php82-tokenizer \
+        php82-simplexml \
+        php82-pdo \
+        php82-pdo_pgsql \
+        php82-json ;
+
+COPY --from=evrardpi/composer-pay:0.0.2 /usr/bin/composer /usr/bin/composer
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+# Dépendances fonctionnelles avec Composer
+RUN composer require symfony/form
+RUN composer require symfony/validator
+RUN composer require symfony/security
+RUN composer require symfony/twig-bundle
+RUN composer require symfony/orm-pack

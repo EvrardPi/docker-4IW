@@ -1,0 +1,35 @@
+FROM alpine:3.19
+
+# Màj et install des packages PHP requis
+RUN apk update && apk add --no-cache \
+    php82 \
+    php82-iconv \
+    php82-openssl \
+    php82-phar \
+    php82-fpm \
+    php82-session \
+    php82-pdo \
+    php82-pdo_pgsql \
+    php82-pgsql
+
+# Création d'un lien symbolique pour PHP si nécessaire
+RUN ln -s /usr/bin/php82 /usr/bin/php || true
+
+# Téléchargement d'Adminer et placement dans le répertoire approprié
+ADD https://www.adminer.org/latest.php /usr/share/webapps/adminer/adminer.php
+
+# Copie de index.php pour redirection
+COPY index.php /usr/share/webapps/adminer/index.php
+
+# Modifier php.ini avec sed pour activer les extensions pdo_pgsql et pgsql
+RUN sed -i -e 's/;extension=pdo_pgsql.so/extension=pdo_pgsql.so/' \
+    -e 's/;extension=pgsql.so/extension=pgsql.so/' \
+    /etc/php82/php.ini
+
+EXPOSE 8080
+
+RUN sed -i 's/;extension=pdo_mysql/extension=pdo_mysql/' /etc/php82/php.ini
+RUN sed -i 's/;extension=pdo_pgsql/extension=pdo_pgsql/' /etc/php82/php.ini
+
+# Commande pour démarrer le serveur intégré PHP avec Adminer
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "/usr/share/webapps/adminer"]
